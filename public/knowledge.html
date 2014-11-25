@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8">
+    <title>knowledge</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <!-- Le styles -->
+    <link href="css/bootstrap.css" rel="stylesheet">
+    <link href="css/article.css" rel="stylesheet">
+    <link href="css/bootstrap-responsive.css" rel="stylesheet">
+
+    <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="../assets/js/html5shiv.js"></script>
+    <![endif]-->
+  </head>
+
+  <body>
+    <div class="container">
+      <div class="masthead">
+        <h3 class="muted">Project name</h3>
+        <div class="navbar">
+          <div class="navbar-inner">
+            <div class="container">
+              <ul class="nav">
+                <li class="active"><a href="#">Home</a></li>
+                <li><a href="#">Projects</a></li>
+                <li><a href="#">Services</a></li>
+                <li><a href="#">Downloads</a></li>
+                <li><a href="#">About</a></li>
+                <li><a href="#">Contact</a></li>d
+              </ul>
+            </div>
+          </div>
+        </div><!-- /.navbar -->
+      </div>
+
+      <!-- Jumbotron -->
+      <div class="jumbotron">
+        <h1>ナレッジ管理</h1>
+        <p class="lead">ナレッジの管理として、以下のルールに準拠すること。<br>・登録：エラーコードを正しく記載すること。表現をわかりやすく記載すること。<br>
+        ・検索：ナレッジを検索することができます。</p>
+        <a href="#inputModal" role="button" class="btn btn-large btn-primary" data-toggle="modal">登録</a>
+        <a href="#searchModal" role="button" class="btn btn-large btn-success" data-toggle="modal">検索</a>
+      </div>
+
+      <hr>
+
+      <script id="articleTemplate" type="text/template">
+        <div class="span4">
+          <input type="hidden" name="_id" value=<%- _id %>
+          <h3><%= title %></h3>
+          <p><%= content1 %></p><p><a href="#" class="btn">詳細参照</a></p>
+        </div>
+      </script>
+
+      <!-- 登録モーダル -->
+      <div id="inputModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+          <h3 id="myModalLabel">情報登録</h3>
+        </div>
+        <div class="modal-body">
+          <form>
+            <fieldset>
+              <label>入力内容</label>
+              <select id='input-category'>
+                <option>障害</option>
+                <option>技術情報</option>
+                <option>共有情報</option>
+                <option>ショート情報</option>
+                <option>プロジェクト共有情報</option>
+              </select>
+              <label>タイトル</label>
+              <input id='input-title' type="text" placeholder="Type something…"> 
+              <label>内容１</label>
+              <textarea id='input-content1' rows="3"></textarea>
+              <label>内容２</label>
+              <label></label>
+              <textarea id='input-content2' rows="5"></textarea>
+            </fieldset>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+          <button id="article-add" class="btn btn-primary">登録</button>
+        </div>
+      </div>
+
+      <!-- 検索モーダル -->
+      <div id="searchModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+          <h3 id="myModalLabel">Modal header</h3>
+        </div>
+        <div class="modal-body">
+          <p>One fine body…</p>
+        </div>
+        <div class="modal-footer">
+          <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+          <button class="btn btn-primary">Save changes</button>
+        </div>
+      </div>
+
+
+      <!-- Example row of columns -->
+      <div id="knowledge"></div>
+      <div id="detail"></div>
+      <hr>
+
+      <div class="footer">
+        <p>&copy; Company 2014</p>
+      </div>
+
+    </div> <!-- /container -->
+    
+    <!-- Le javascript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="js/lib/jquery-2.1.1.js"></script>
+    <script src="js/lib/bootstrap.js"></script>
+  	<script src="js/lib/Underscore.js"></script>
+  	<script src="js/lib/backbone.js"></script>
+  	<script src="js/article.model.js"></script>
+    <script src="js/article.collection.js"></script>
+    <script src="js/article.view.js"></script>
+    <script src="js/article.app.js"></script>
+  </body>
+</html>

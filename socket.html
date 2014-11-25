@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+		<script src="/socket.io/socket.io.js"></script>
+		<script>
+			io.connect().on('msg push', function(count){
+				var c = JSON.stringify(count);
+				$('body').html(count.count);
+			});
+		</script>
+	</head>
+	<body>
+		Loading...
+	</body>
+</html>
