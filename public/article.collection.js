@@ -12,7 +12,7 @@ var app = app || {};
 	var Articles = Backbone.Collection.extend({
 		// Reference to this collection's model.
 		model: app.ArticleModel,
-		url: '/knowledge/list',
+		url: '/knowledge',
 		parse: function(res){
 			console.log(res);
 			return res.response;

@@ -68,11 +68,11 @@
             <fieldset>
               <label>入力内容</label>
               <select id='input-category'>
-                <option>障害</option>
-                <option>技術情報</option>
-                <option>共有情報</option>
-                <option>ショート情報</option>
-                <option>プロジェクト共有情報</option>
+                <option value="障害情報">障害情報</option>
+                <option value="技術情報">技術情報</option>
+                <option value="共有情報">共有情報</option>
+                <option value="ショート情報">ショート情報</option>
+                <option value="プロジェクト情報">プロジェクト共有情報</option>
               </select>
               <label>タイトル</label>
               <input id='input-title' type="text" placeholder="Type something…"> 
@@ -85,8 +85,8 @@
           </form>
         </div>
         <div class="modal-footer">
-          <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
-          <button id="article-add" class="btn btn-primary">登録</button>
+          <button class="btn" data-dismiss="modal" aria-hidden="true">閉じる</button>
+          <button id="article-add-button" class="btn btn-primary">登録</button>
         </div>
       </div>
 

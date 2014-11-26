@@ -5,7 +5,7 @@ var app = app || {};
 
 	app.ArticleView = Backbone.View.extend({
 		events: {
-			'click #article-add': 'articleAdd'
+			"click #article-add": "articleAdd"
 		},
 
 		articleTemplate: _.template($('#articleTemplate').html()),
@@ -30,8 +30,35 @@ var app = app || {};
 			return this;	
 		},
 		articleAdd: function(){
-			alert("OK");
+			console.log("articleAddの実行");
 		}
+	});
+
+	app.ArticleAddView = Backbone.View.extend({
+		initialize: function(){
+			this.$input-title = $('#input-title');
+			this.$input-category = $('#input-category');
+			this.$input-content1 = $('#input-content1');
+			this.$input-content2 = $('#input-content2');
+
+			app.Articles.model = app.ArticleModel;
+		}
+		el: '#inputModal',
+		events: {
+			'click #article-add-button': 'articleAdd'
+		},
+		newAttributes: function(){
+			return {
+				category: this.$input-category.val();
+				title: this.$input-title.val();
+				content1: this.$input-content1.val();
+				content2: this.$input-content2.val();	
+			};
+		},
+		articleAdd: function(e){
+			app.Article.create(newAttribute());	
+		},
+
 	});
 
 	app.Articles.model = app.ArticleModel;
@@ -44,6 +71,9 @@ var app = app || {};
 			console.log("fetch error");
 		}
 	});
+
+	
+	
 })(jQuery);
 
 
