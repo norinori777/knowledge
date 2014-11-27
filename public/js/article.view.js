@@ -36,29 +36,29 @@ var app = app || {};
 
 	app.ArticleAddView = Backbone.View.extend({
 		initialize: function(){
-			this.$input-title = $('#input-title');
-			this.$input-category = $('#input-category');
-			this.$input-content1 = $('#input-content1');
-			this.$input-content2 = $('#input-content2');
+			this.$title = this.$('#input-title');
+			this.$category = this.$('#input-category');
+			this.$content1 = this.$('#input-content1');
+			this.$content2 = this.$('#input-content2');
 
 			app.Articles.model = app.ArticleModel;
-		}
+		},
 		el: '#inputModal',
 		events: {
 			'click #article-add-button': 'articleAdd'
 		},
 		newAttributes: function(){
 			return {
-				category: this.$input-category.val();
-				title: this.$input-title.val();
-				content1: this.$input-content1.val();
-				content2: this.$input-content2.val();	
+				category: this.$category.val(),
+				title: this.$title.val(),
+				content1: this.$content1.val(),
+				content2: this.$content2.val()	
 			};
 		},
 		articleAdd: function(e){
-			app.Article.create(newAttribute());	
-		},
-
+			console.log(this.newAttributes());
+			app.Articles.create(this.newAttributes());	
+		}
 	});
 
 	app.Articles.model = app.ArticleModel;
