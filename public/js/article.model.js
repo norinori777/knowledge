@@ -34,6 +34,7 @@ var app = app || {};
 		},
 		//値の正当性をチェック 
 		validate:function(attribute){
+			/*
 			if(attribute.title === ''){
 				return "titleには、値をセットしましょう";
 			}
@@ -43,6 +44,7 @@ var app = app || {};
 			if(attribute.content2 === ''){
 				return "content2には、値をセットしましょう"				
 			}
+			*/
 		}
 	});
 })();

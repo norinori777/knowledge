@@ -4,6 +4,18 @@
 		"selected_items":
 		[
 			[
+				"seli",
+				"serializeArray	.serializeArray()"
+			],
+			[
+				"se",
+				"selected	Attr"
+			],
+			[
+				"li",
+				"listenTo"
+			],
+			[
 				"js",
 				"article.collection.js"
 			],
@@ -48,18 +60,21 @@
 	"buffers":
 	[
 		{
-			"file": "public/article.collection.js",
+			"file": "public/js/article.model.js",
 			"settings":
 			{
-				"buffer_size": 1117,
+				"buffer_size": 962,
 				"line_ending": "Windows"
 			}
 		},
 		{
-			"file": "public/js/article.model.js",
+			"contents": "/*global Backbone */\nvar app = app || {};\n\n(function () {\n	'use strict';\n\n	// Todo Collection\n	// ---------------\n\n	// The collection of todos is backed by *localStorage* instead of a remote\n	// server.\n	var Articles = Backbone.Collection.extend({\n		// Reference to this collection's model.\n		model: app.Article,\n		url: '/knowledge',	\n\n		// Filter down the list of all todo items that are finished.\n		completed: function () {\n			return this.where({completed: true});\n		},\n\n		// Filter down the list to only todo items that are still not finished.\n		remaining: function () {\n			return this.where({completed: false});\n		},\n\n		// We keep the Todos in sequential order, despite being saved by unordered\n		// GUID in the database. This generates the next order number for new items.\n		nextOrder: function () {\n			return this.length ? this.last().get('order') + 1 : 1;\n		},\n\n		// Todos are sorted by their original insertion order.\n		comparator: 'order'\n	});\n\n	// Create our global collection of **Todos**.\n	app.Articles = new Articles();\n})();\n",
+			"file": "public/js/article.collection.js",
+			"file_size": 1077,
+			"file_write_time": 130615756038464872,
 			"settings":
 			{
-				"buffer_size": 950,
+				"buffer_size": 1039,
 				"line_ending": "Windows"
 			}
 		},
@@ -67,15 +82,18 @@
 			"file": "public/knowledge.html",
 			"settings":
 			{
-				"buffer_size": 4824,
+				"buffer_size": 12694,
 				"line_ending": "Windows"
 			}
 		},
 		{
+			"contents": "var app = app || {};\n\n(function ($) {\n	'use strict';\n\n	app.ArticleView = Backbone.View.extend({\n		events: {\n			\"click #article-show-button\" : \"articleShow\"\n		},\n		el:'#knowledge',\n		articleTemplate: _.template($('#articleTemplate').html()),\n		\n		render: function(items){\n			var str, i, j = 0;\n			for(i = 0; i < items.length; i++){\n				if(j === 0){\n					str = '<div class=\"row-fluid\">';\n				}\n				str = str + this.articleTemplate(items[i]);\n				j++;\n				if(j === 3 || _.isUndefined(items[i+1])){\n					str = str + '</div>';\n					this.$el.append(str);\n					j = 0;	\n				}\n			};\n			return this;	\n		},\n		articleShow: function(){\n			this.trigger('showDetail');\n		}\n	});\n\n	app.ArticleAddView = Backbone.View.extend({\n		initialize: function(){\n			this.$title = this.$('#input-title');\n			this.$errorCode = this.$('#input-errorCode');\n			this.$progress = this.$('#input-progress');\n			this.$category = this.$('#input-category');\n			this.$content1 = this.$('#input-content1');\n			this.$content2 = this.$('#input-content2');\n\n			// this.listenTo(app.Articles, 'add', this.completeMsg);\n			app.Articles.model = app.ArticleModel;\n		},\n\n		// read template\n		inputFormFailureTemplate: _.template($('#inputFormFailureTemplate').html()),\n		inputFormQuestionTemplate: _.template($('#inputFormQuestionTemplate').html()),\n		inputFormTecTemplate: _.template($('#inputFormTecTemplate').html()),\n		inputFormComTemplate: _.template($('#inputFormComTemplate').html()),\n		inputFormProjectTemplate: _.template($('#inputFormProjectTemplate').html()),\n		inputFormShortTemplate: _.template($('#inputFormShortTemplate').html()),\n\n		\n		el: '#inputModal',\n		events: {\n			'click #article-add-button': 'articleAdd',\n			'change #input-category': 'renderInputForm'\n		},\n		newAttributes: function(){\n			var values, i, params, return_data = {};\n			values = $('#article-data');\n			params = values.serializeArray();\n			for(i = 0; i < params.length; i++){\n				return_data[params[i].name] = params[i].value;\n			}\n			return return_data;\n		},\n		clearAttributes: function(){\n			this.$title.val('');\n			this.$category.val('');\n			this.$content1.val('');\n			this.$content2.val('');\n		},\n		articleAdd: function(e){\n			app.Articles.create(this.newAttributes(),{\n				wait:true,\n				success:function(resp){\n					// 正常に登録された旨のコメント\n					alert(\"正常に登録することができました\");\n					// クリア\n					$('#input-form').children().remove();\n					$('#iput-category').val('default');\n				},\n				error:function(resp){\n					// 異常が発生した旨のコメント\n				}\n			});	\n		},\n		completeMsg: function(e){\n			alert(\"登録が完了しました\");\n		},\n		renderInputForm: function(e){\n			var str;\n\n			if(this.$category.val() === 'default'){\n				this.$('#input-form').children().remove();\n				return this;\n			}\n			this.$('#input-form').children().remove();\n			if(this.$category.val() === '障害情報'){\n				str = this.inputFormFailureTemplate({});\n			}\n			if(this.$category.val() === '問い合わせ情報'){\n				str = this.inputFormQuestionTemplate({});\n			}\n			if(this.$category.val() === '技術情報'){\n				str = this.inputFormTecTemplate({});\n			}\n			if(this.$category.val() === '共有情報'){\n				str = this.inputFormComTemplate({});\n			}\n			if(this.$category.val() === 'ショート情報'){\n				str = this.inputFormShortTemplate({});\n			}\n			if(this.$category.val() === 'プロジェクト情報'){\n				str = this.inputFormProjectTemplate({});\n			}\n			this.$('#input-form').append(str);\n			return this;\n		}\n\n	});\n\n	app.ArticleDetailView = Backbone.View.extend({\n		initialize: function(){\n			this.listenTo(app.mainView, 'showDetail', this.articleShow);\n			// this.listenTo(app.Articles, 'add', this.completeMsg);\n			app.Articles.model = app.ArticleModel;\n		},\n\n		// read template\n		showDetailFailureTemplate: _.template($('#showDetailFailureTemplate').html()),\n		showDetailQuestionTemplate: _.template($('#showDetailQuestionTemplate').html()),\n		showDetailTecTemplate: _.template($('#showDetailTecTemplate').html()),\n		showDetailComTemplate: _.template($('#showDetailComTemplate').html()),\n		showDetailProjectTemplate: _.template($('#showDetailProjectTemplate').html()),\n		showDetailShortTemplate: _.template($('#inputFormShortTemplate').html()),\n		\n		el: '#detailModal',\n		events: {\n			'click #article-show-button': 'articleShow',\n		},\n		newAttributes: function(){\n			var values, i, params, return_data = {};\n			values = $('#article-data');\n			params = values.serializeArray();\n			for(i = 0; i < params.length; i++){\n				return_data[params[i].name] = params[i].value;\n			}\n			return return_data;\n		},\n		clearAttributes: function(){\n			this.$title.val('');\n			this.$category.val('');\n			this.$content1.val('');\n			this.$content2.val('');\n		},\n		articleShow: function(e){\n			app.Articles.create(this.newAttributes(),{\n				wait:true,\n				success:function(resp){\n					// 正常に登録された旨のコメント\n					alert(\"正常に登録することができました\");\n					// クリア\n					$('#input-form').children().remove();\n					$('#iput-category').val('default');\n				},\n				error:function(resp){\n					// 異常が発生した旨のコメント\n				}\n			});	\n		},\n		completeMsg: function(e){\n			alert(\"登録が完了しました\");\n		},\n		renderInputForm: function(e){\n			var str;\n\n			if(this.$category.val() === 'default'){\n				this.$('#input-form').children().remove();\n				return this;\n			}\n			this.$('#input-form').children().remove();\n			if(this.$category.val() === '障害情報'){\n				str = this.inputFormFailureTemplate({});\n			}\n			if(this.$category.val() === '問い合わせ情報'){\n				str = this.inputFormQuestionTemplate({});\n			}\n			if(this.$category.val() === '技術情報'){\n				str = this.inputFormTecTemplate({});\n			}\n			if(this.$category.val() === '共有情報'){\n				str = this.inputFormComTemplate({});\n			}\n			if(this.$category.val() === 'ショート情報'){\n				str = this.inputFormShortTemplate({});\n			}\n			if(this.$category.val() === 'プロジェクト情報'){\n				str = this.inputFormProjectTemplate({});\n			}\n			this.$('#input-form').append(str);\n			return this;\n		}\n\n	});\n\n	app.Articles.model = app.ArticleModel;\n	app.Articles.fetch({\n		success: function(collection, res, options){\n			var viewArticle1 = new app.ArticleView();\n			viewArticle1.render(res);\n		},\n		error: function error(){\n			console.log(\"fetch error\");\n		}\n	});\n})(jQuery);\n\n\n\n\n\n",
 			"file": "public/js/article.view.js",
+			"file_size": 6659,
+			"file_write_time": 130619997838244626,
 			"settings":
 			{
-				"buffer_size": 1761,
+				"buffer_size": 6047,
 				"line_ending": "Windows"
 			}
 		},
@@ -83,7 +101,7 @@
 			"file": "public/js/article.app.js",
 			"settings":
 			{
-				"buffer_size": 227,
+				"buffer_size": 257,
 				"line_ending": "Windows"
 			}
 		},
@@ -91,7 +109,7 @@
 			"file": "lib/routes.js",
 			"settings":
 			{
-				"buffer_size": 2411,
+				"buffer_size": 2390,
 				"line_ending": "Windows"
 			}
 		}
@@ -99,7 +117,7 @@
 	"build_system": "",
 	"command_palette":
 	{
-		"height": 387.0,
+		"height": 392.0,
 		"selected_items":
 		[
 			[
@@ -147,7 +165,7 @@
 				"Set Syntax: JSON"
 			]
 		],
-		"width": 322.0
+		"width": 479.0
 	},
 	"console":
 	{
@@ -171,12 +189,14 @@
 		"/C/Users/Terunori Kawai/Desktop/knowledge",
 		"/C/Users/Terunori Kawai/Desktop/knowledge/lib",
 		"/C/Users/Terunori Kawai/Desktop/knowledge/public",
-		"/C/Users/Terunori Kawai/Desktop/knowledge/public/css",
 		"/C/Users/Terunori Kawai/Desktop/knowledge/public/js",
 		"/C/Users/Terunori Kawai/Desktop/knowledge/public/js/lib"
 	],
 	"file_history":
 	[
+		"/C/Users/Terunori Kawai/Desktop/knowledge/public/js/article.collection.js",
+		"/C/Users/Terunori Kawai/Desktop/knowledge/public/lib/article.collection.js",
+		"/C/Users/Terunori Kawai/Desktop/knowledge/public/article.collection.js",
 		"/C/Users/Terunori Kawai/Desktop/knowledge/public/js/article.app.js",
 		"/C/Users/Terunori Kawai/Desktop/knowledge/lib/crud.js",
 		"/C/Users/Terunori Kawai/Desktop/knowledge/lib/routes.js",
@@ -187,7 +207,6 @@
 		"/C/Users/Terunori Kawai/Desktop/knowledge/public/css/article.css",
 		"/C/Users/Terunori Kawai/Desktop/knowledge/public/js/article.view.js",
 		"/C/Users/Terunori Kawai/Desktop/knowledge/public/js/article.model.js",
-		"/C/Users/Terunori Kawai/Desktop/knowledge/public/article.collection.js",
 		"/C/Users/Terunori Kawai/Desktop/knowledge/public/css/bootstrap-responsive.css",
 		"/C/Users/Terunori Kawai/Desktop/todomvc/examples/backbone/bower.json",
 		"/C/Users/Terunori Kawai/Desktop/todomvc/examples/backbone/readme.md",
@@ -231,6 +250,9 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"inputForm",
+			"article-data",
+			"hidden",
 			"knowledge",
 			"stats-template",
 			"				<",
@@ -256,6 +278,7 @@
 		"regex": false,
 		"replace_history":
 		[
+			"showDetail"
 		],
 		"reverse": false,
 		"show_context": true,
@@ -271,212 +294,19 @@
 			[
 				{
 					"buffer": 0,
-					"file": "public/article.collection.js",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 1117,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								327,
-								336
-							]
-						],
-						"settings":
-						{
-							"BracketHighlighterBusy": false,
-							"bh_regions":
-							[
-								"bh_c_define",
-								"bh_c_define_center",
-								"bh_c_define_open",
-								"bh_c_define_close",
-								"bh_c_define_content",
-								"bh_round",
-								"bh_round_center",
-								"bh_round_open",
-								"bh_round_close",
-								"bh_round_content",
-								"bh_single_quote",
-								"bh_single_quote_center",
-								"bh_single_quote_open",
-								"bh_single_quote_close",
-								"bh_single_quote_content",
-								"bh_curly",
-								"bh_curly_center",
-								"bh_curly_open",
-								"bh_curly_close",
-								"bh_curly_content",
-								"bh_square",
-								"bh_square_center",
-								"bh_square_open",
-								"bh_square_close",
-								"bh_square_content",
-								"bh_default",
-								"bh_default_center",
-								"bh_default_open",
-								"bh_default_close",
-								"bh_default_content",
-								"bh_angle",
-								"bh_angle_center",
-								"bh_angle_open",
-								"bh_angle_close",
-								"bh_angle_content",
-								"bh_unmatched",
-								"bh_unmatched_center",
-								"bh_unmatched_open",
-								"bh_unmatched_close",
-								"bh_unmatched_content",
-								"bh_double_quote",
-								"bh_double_quote_center",
-								"bh_double_quote_open",
-								"bh_double_quote_close",
-								"bh_double_quote_content",
-								"bh_tag",
-								"bh_tag_center",
-								"bh_tag_open",
-								"bh_tag_close",
-								"bh_tag_content",
-								"bh_regex",
-								"bh_regex_center",
-								"bh_regex_open",
-								"bh_regex_close",
-								"bh_regex_content"
-							],
-							"codeintel": true,
-							"codeintel_config":
-							{
-								"JavaScript":
-								{
-									"codeintel_max_recursive_dir_depth": 2,
-									"codeintel_scan_files_in_project": false,
-									"javascriptExtraPaths":
-									[
-									]
-								},
-								"PHP":
-								{
-									"codeintel_max_recursive_dir_depth": 5,
-									"codeintel_scan_files_in_project": false,
-									"phpExtraPaths":
-									[
-									]
-								},
-								"Python":
-								{
-									"env":
-									{
-									}
-								}
-							},
-							"codeintel_enabled_languages":
-							[
-								"JavaScript",
-								"Mason",
-								"XBL",
-								"XUL",
-								"RHTML",
-								"SCSS",
-								"Python",
-								"HTML",
-								"Ruby",
-								"Python3",
-								"XML",
-								"Sass",
-								"XSLT",
-								"Django",
-								"HTML5",
-								"Perl",
-								"CSS",
-								"Twig",
-								"Less",
-								"Smarty",
-								"Node.js",
-								"Tcl",
-								"TemplateToolkit",
-								"PHP"
-							],
-							"codeintel_live": true,
-							"codeintel_live_enabled_languages":
-							[
-								"JavaScript",
-								"Mason",
-								"XBL",
-								"XUL",
-								"RHTML",
-								"SCSS",
-								"Python",
-								"HTML",
-								"Ruby",
-								"Python3",
-								"XML",
-								"Sass",
-								"XSLT",
-								"Django",
-								"HTML5",
-								"Perl",
-								"CSS",
-								"Twig",
-								"Less",
-								"Smarty",
-								"Node.js",
-								"Tcl",
-								"TemplateToolkit",
-								"PHP"
-							],
-							"codeintel_max_recursive_dir_depth": 10,
-							"codeintel_scan_exclude_dir":
-							{
-								"JavaScript":
-								[
-									"/build/",
-									"/min/"
-								]
-							},
-							"codeintel_scan_files_in_project": true,
-							"codeintel_selected_catalogs":
-							[
-								"PyWin32",
-								"jQuery",
-								"Rails"
-							],
-							"codeintel_snippets": true,
-							"codeintel_syntax_map":
-							{
-								"Python Django": "Python"
-							},
-							"codeintel_tooltips": "popup",
-							"origin_encoding": "ASCII",
-							"sublime_auto_complete": true,
-							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 39.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 4,
-					"type": "text"
-				},
-				{
-					"buffer": 1,
 					"file": "public/js/article.model.js",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 950,
+						"buffer_size": 962,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								661,
-								661
+								942,
+								942
 							]
 						],
 						"settings":
@@ -649,10 +479,203 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 167.0,
+						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 5,
+					"stack_index": 4,
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": "public/js/article.collection.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 1039,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								334,
+								334
+							]
+						],
+						"settings":
+						{
+							"BracketHighlighterBusy": false,
+							"bh_regions":
+							[
+								"bh_c_define",
+								"bh_c_define_center",
+								"bh_c_define_open",
+								"bh_c_define_close",
+								"bh_c_define_content",
+								"bh_round",
+								"bh_round_center",
+								"bh_round_open",
+								"bh_round_close",
+								"bh_round_content",
+								"bh_single_quote",
+								"bh_single_quote_center",
+								"bh_single_quote_open",
+								"bh_single_quote_close",
+								"bh_single_quote_content",
+								"bh_curly",
+								"bh_curly_center",
+								"bh_curly_open",
+								"bh_curly_close",
+								"bh_curly_content",
+								"bh_square",
+								"bh_square_center",
+								"bh_square_open",
+								"bh_square_close",
+								"bh_square_content",
+								"bh_default",
+								"bh_default_center",
+								"bh_default_open",
+								"bh_default_close",
+								"bh_default_content",
+								"bh_angle",
+								"bh_angle_center",
+								"bh_angle_open",
+								"bh_angle_close",
+								"bh_angle_content",
+								"bh_unmatched",
+								"bh_unmatched_center",
+								"bh_unmatched_open",
+								"bh_unmatched_close",
+								"bh_unmatched_content",
+								"bh_double_quote",
+								"bh_double_quote_center",
+								"bh_double_quote_open",
+								"bh_double_quote_close",
+								"bh_double_quote_content",
+								"bh_tag",
+								"bh_tag_center",
+								"bh_tag_open",
+								"bh_tag_close",
+								"bh_tag_content",
+								"bh_regex",
+								"bh_regex_center",
+								"bh_regex_open",
+								"bh_regex_close",
+								"bh_regex_content"
+							],
+							"codeintel": true,
+							"codeintel_config":
+							{
+								"JavaScript":
+								{
+									"codeintel_max_recursive_dir_depth": 2,
+									"codeintel_scan_files_in_project": false,
+									"javascriptExtraPaths":
+									[
+									]
+								},
+								"PHP":
+								{
+									"codeintel_max_recursive_dir_depth": 5,
+									"codeintel_scan_files_in_project": false,
+									"phpExtraPaths":
+									[
+									]
+								},
+								"Python":
+								{
+									"env":
+									{
+									}
+								}
+							},
+							"codeintel_enabled_languages":
+							[
+								"JavaScript",
+								"Mason",
+								"XBL",
+								"XUL",
+								"RHTML",
+								"SCSS",
+								"Python",
+								"HTML",
+								"Ruby",
+								"Python3",
+								"XML",
+								"Sass",
+								"XSLT",
+								"Django",
+								"HTML5",
+								"Perl",
+								"CSS",
+								"Twig",
+								"Less",
+								"Smarty",
+								"Node.js",
+								"Tcl",
+								"TemplateToolkit",
+								"PHP"
+							],
+							"codeintel_live": true,
+							"codeintel_live_enabled_languages":
+							[
+								"JavaScript",
+								"Mason",
+								"XBL",
+								"XUL",
+								"RHTML",
+								"SCSS",
+								"Python",
+								"HTML",
+								"Ruby",
+								"Python3",
+								"XML",
+								"Sass",
+								"XSLT",
+								"Django",
+								"HTML5",
+								"Perl",
+								"CSS",
+								"Twig",
+								"Less",
+								"Smarty",
+								"Node.js",
+								"Tcl",
+								"TemplateToolkit",
+								"PHP"
+							],
+							"codeintel_max_recursive_dir_depth": 10,
+							"codeintel_scan_exclude_dir":
+							{
+								"JavaScript":
+								[
+									"/build/",
+									"/min/"
+								]
+							},
+							"codeintel_scan_files_in_project": true,
+							"codeintel_selected_catalogs":
+							[
+								"PyWin32",
+								"jQuery",
+								"Rails"
+							],
+							"codeintel_snippets": true,
+							"codeintel_syntax_map":
+							{
+								"Python Django": "Python"
+							},
+							"codeintel_tooltips": "popup",
+							"origin_encoding": "ASCII",
+							"sublime_auto_complete": true,
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 50.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 3,
 					"type": "text"
 				},
 				{
@@ -661,15 +684,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 4824,
+						"buffer_size": 12694,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								646,
-								646
+								12011,
+								12011
 							]
 						],
 						"settings":
@@ -844,7 +867,7 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 836.0,
+						"translation.y": 4289.0,
 						"zoom_level": 1.0
 					},
 					"stack_index": 1,
@@ -862,15 +885,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 1761,
+						"buffer_size": 6047,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								1453,
-								1453
+								5957,
+								5957
 							]
 						],
 						"settings":
@@ -1043,7 +1066,7 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 298.0,
+						"translation.y": 697.0,
 						"zoom_level": 1.0
 					},
 					"stack_index": 0,
@@ -1055,15 +1078,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 227,
+						"buffer_size": 257,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								227,
-								227
+								231,
+								231
 							]
 						],
 						"settings":
@@ -1247,15 +1270,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 2411,
+						"buffer_size": 2390,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								521,
-								521
+								511,
+								511
 							]
 						],
 						"settings":
@@ -1427,11 +1450,11 @@
 							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
 							"translate_tabs_to_spaces": false
 						},
-						"translation.x": 3.0,
-						"translation.y": 26.0,
+						"translation.x": 0.0,
+						"translation.y": 182.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 3,
+					"stack_index": 5,
 					"type": "text"
 				}
 			]
@@ -1465,7 +1488,7 @@
 		"cols":
 		[
 			0.0,
-			0.5,
+			0.486509274874,
 			1.0
 		],
 		"rows":
@@ -1486,7 +1509,7 @@
 	"project": "knowledge.sublime-project",
 	"replace":
 	{
-		"height": 38.0
+		"height": 62.0
 	},
 	"save_all_on_build": true,
 	"select_file":
@@ -1525,7 +1548,7 @@
 	"show_open_files": true,
 	"show_tabs": true,
 	"side_bar_visible": true,
-	"side_bar_width": 169.0,
+	"side_bar_width": 180.0,
 	"status_bar_visible": true,
 	"template_settings":
 	{

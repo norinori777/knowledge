@@ -12,7 +12,7 @@ var app = app || {};
 	var Articles = Backbone.Collection.extend({
 		// Reference to this collection's model.
 		model: app.Article,
-		url: '/knowledge',
+		url: '/knowledge',	
 
 		// Filter down the list of all todo items that are finished.
 		completed: function () {
