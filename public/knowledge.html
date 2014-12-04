@@ -171,14 +171,23 @@
       <div id="searchModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
         <div class="modal-header">
           <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-          <h3 id="myModalLabel">Modal header</h3>
+          <h3 id="myModalLabel">検索画面</h3>
         </div>
         <div class="modal-body">
-          <p>One fine body…</p>
+        <label>検索期間</label>
+        <select id='input-progress' name="progress">
+          <option value="default" selected="true">－－ 選択してください －－</option>
+          <option value="31">１ヶ月以内</option>
+          <option value="91">３ヶ月以内</option>
+          <option value="183">６ヶ月以内</option>
+          <option value="365">1年以内</option>
+        </select>
+        <label>検索内容</label>
+        <input id='input-title' name="title" type="text" placeholder="キーワード入力">
         </div>
         <div class="modal-footer">
-          <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
-          <button class="btn btn-primary">Save changes</button>
+          <button class="btn" data-dismiss="modal" aria-hidden="true">閉じる</button>
+          <button class="btn btn-primary">検索</button>
         </div>
       </div>
 
@@ -186,7 +195,7 @@
       <div id="detailModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
         <div class="modal-header">
           <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-          <h3 id="myModalLabel">詳細画面</h3>
+          <h3 id="myModalLabel" class="panel-title">詳細画面</h3>
         </div>
         <div class="modal-body">
           <div id="show-detail"></div>
@@ -199,43 +208,42 @@
 
       <!-- 詳細フォームテンプレート -->
       <script id="showDetailFailureTemplate" type="text/template">
-        <h3>タイトル</h3>
-        <p><%- article.title %></p>
         <h3>カテゴリ</h3>
         <p><%- article.category %></p>
+        <h3>タイトル</h3>
+        <p><%- article.title %></p>
         <h3>進捗</h3>
         <p><%- article.progress %></p>
         <h3>エラーコード</h3>
         <p><%- article.errorCode %></p>
-        <h3>内容１</h3>
+        <h3>概要内容</h3>
         <p><%- article.content1 %></p>
-        <h3>内容２</h3>
+        <h3>詳細内容</h3>
         <p><%- article.content2 %></p>        
       </script>
 
       <script id="showDetailQuestionTemplate" type="text/template">
-        <label>タイトル</label>
-        <input id='input-title' name="title" type="text" placeholder="タイトルの入力">
-        <label>進捗</label>
-        <select id='input-progress' name="progress">
-          <option value="default" selected="true">－－ 選択してください －－</option>
-          <option value="未対応">未対応</option>
-          <option value="対応中">対応中</option>
-          <option value="対応完了"対応完了>技術情報</option>
-        </select>         
-        <label>内容１</label>
-        <textarea id='input-content1' name="content1" rows="3" placeholder="問い合わせ内容の入力"></textarea>
-        <label>内容２</label>
-        <textarea id='input-content2' name="content2" rows="5" placeholder="問い合わせ対応内容の入力"></textarea>
+        <h3>カテゴリ</h3>
+        <p><%- article.category %></p>
+        <h3>タイトル</h3>
+        <p><%- article.title %></p>
+        <h3>進捗</h3>
+        <p><%- article.progress %></p>
+        <h3>問い合わせ内容</h3>
+        <p><%- article.content1 %></p>
+        <h3>対応内容</h3>
+        <p><%- article.content2 %></p>        
       </script>
 
       <script id="showDetailTecTemplate" type="text/template">
-        <label>タイトル</label>
-        <input id='input-title' name="title" type="text" placeholder="タイトルの入力">
-        <label>内容１</label>
-        <textarea id='input-content1' name="content1" placeholder="概要内容の入力" rows="3"></textarea>
-        <label>内容２</label>
-        <textarea id='input-content2'name="content2" placeholder="詳細内容の入力" rows="5"></textarea>
+        <h3>カテゴリ</h3>
+        <p><%- article.category %></p>
+        <h3>タイトル</h3>
+        <p><%- article.title %></p>
+        <h3>内容</h3>
+        <p><%- article.content1 %></p>
+        <h3>詳細</h3>
+        <p><%- article.content2 %></p>        
       </script>
 
       <script id="showDetailComTemplate" type="text/template">
@@ -250,24 +258,16 @@
       </script>
 
       <script id="showDetailProjectTemplate" type="text/template">
-        <label>プロジェクト</label>
-        <input id='input-title' name="title" type="text" placeholder="プロジェクト名の入力">
-        <label>工程</label>
-        <select id='input-progress' name="progress">
-          <option value="default" selected="true">－－ 選択してください －－</option>
-          <option value="見積もり">見積もり</option>
-          <option value="要件定義">要件定義</option>
-          <option value="基本設計">基本設計</option>
-          <option value="詳細設計">詳細設計</option>
-          <option value="開発／単体">開発／単体</option>
-          <option value="結合テスト">結合テスト</option>
-          <option value="統合テスト">統合テスト</option>
-          <option value="本番リリース">本番リリース</option>
-        </select>        
-        <label>内容１</label>
-        <textarea id='input-content1' name="content1" rows="3" placeholder="プロジェクト概要の入力"></textarea>
-        <label>内容２</label>
-        <textarea id='input-content2' name="content2" rows="5" placeholder="プロジェクト詳細の入力"></textarea>
+        <h3>カテゴリ</h3>
+        <p><%- article.category %></p>
+        <h3>プロジェクト名</h3>
+        <p><%- article.title %></p>
+        <h3>工程</h3>
+        <p><%- article.progress %></p>
+        <h3>内容</h3>
+        <p><%- article.content1 %></p>
+        <h3>詳細</h3>
+        <p><%- article.content2 %></p>        
       </script>
 
       <script id="showDetailShortTemplate" type="text/template">
@@ -278,6 +278,7 @@
         <h3>内容１</h3>
         <p><%- article.content1 %></p>
       </script>
+
 
 
       <!-- Example row of columns -->

@@ -81,7 +81,7 @@ var app = app || {};
 					alert("正常に登録することができました");
 					// クリア
 					$('#input-form').children().remove();
-					$('#iput-category').val('default');
+					$('#input-category').val('default');
 				},
 				error:function(resp){
 					// 異常が発生した旨のコメント
