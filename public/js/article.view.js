@@ -140,7 +140,8 @@ var app = app || {};
 		el: '#detailModal',
 
 		events: {
-			'click #article-edit-button': 'articleEdit'
+			'click #article-edit-button': 'articleEdit',
+			'click #article-delete-button': 'articleDelete'
 		},
 		articleShow: function(id){
 			var article = app.Articles.findWhere({"_id":id});
@@ -177,6 +178,13 @@ var app = app || {};
 		},
 		articleEdit: function(e){
 			this.trigger('showEdit',$('#article-edit-id').attr("value"));	
+		},
+		articleDelete: function(e){
+			if(confirm("削除してよろしいですか？")){
+				var id = $('#article-edit-id').attr("value");
+				var article = app.Articles.findWhere({"_id":id});
+				article.destroy();
+			}
 		}
 	});
 
@@ -214,12 +222,12 @@ var app = app || {};
 
 			if(article.attributes.article.category === '障害情報'){
 				str = this.editFormFailureTemplate(article.attributes);
-				$('#edit-progress').val(article.attributes.progress);
+				$('#edit-progress').val(article.attributes.article.progress);
 			}
 			if(article.attributes.article.category === '問い合わせ情報'){
 				str = this.editFormQuestionTemplate(article.attributes);
-				$('#edit-progress').val(article.attributes.progress);
-			}
+				$('#edit-progress').val(article.attributes.article.progress);
+			}	
 			if(article.attributes.article.category === '技術情報'){
 				str = this.editFormTecTemplate(article.attributes);
 			}
@@ -231,9 +239,9 @@ var app = app || {};
 			}
 			if(article.attributes.article.category === 'プロジェクト情報'){
 				str = this.editFormProjectTemplate(article.attributes);
-				$('#edit-progress').val(article.attributes.progress);
+				$('#edit-progress').val(article.attributes.article.progress);
 			}
-			$('#edit-category').val(article.attributes.category);
+			$('#edit-category').val(article.attributes.article.category);
 			this.$('#edit-form').html(str);
 			return this;
 		}	

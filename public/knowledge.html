@@ -202,7 +202,8 @@
         </div>
         <div class="modal-footer">
           <button class="btn" data-dismiss="modal" aria-hidden="true">閉じる</button>
-          <a href="#editModal" id="article-edit-button" role="button" class="btn btn-large btn-warning" data-toggle="modal">編集</a>
+          <a href="#editModal" id="article-edit-button" role="button" class="btn btn-warning" data-toggle="modal">編集</a>
+          <button id="article-delete-button" class="btn btn-danger">削除</button>
         </div>
       </div>
 
@@ -322,10 +323,10 @@
         <select id='edit-progress' name="progress">
           <option value="未対応">未対応</option>
           <option value="対応中">対応中</option>
-          <option value="対応完了"対応完了>技術情報</option>
+          <option value="対応完了">対応完了</option>
         </select>        
         <label>エラーコード</label>
-        <input id="edit-errorCode" name="errorCode" type="text" placeholder="エラーコードの入力"　value=<%= article.errorCode %>>
+        <input id="edit-errorCode" name="errorCode" type="text" placeholder="エラーコードの入力" value=<%= article.errorCode %>>
         <label>内容１</label>
         <textarea id="edit-content1" name="content1" placeholder="概要の入力" rows="3"><%= article.content1 %></textarea>
         <label>内容２</label>
@@ -340,7 +341,7 @@
         <select id='edit-progress' name="progress">
           <option value="未対応">未対応</option>
           <option value="対応中">対応中</option>
-          <option value="対応完了"対応完了>技術情報</option>
+          <option value="対応完了">対応完了</option>
         </select>         
         <label>内容１</label>
         <textarea id='edit-content1' name="content1" rows="3" placeholder="問い合わせ内容の入力"><%= article.content1 %></textarea>
