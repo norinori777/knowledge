@@ -8,6 +8,7 @@ $(function () {
 	'use strict';
 
 	// kick things off by creating the `App`
+	new app.ArticleEditView();
 	new app.ArticleDetailView();
 	new app.ArticleAddView();
 	new app.ArticleView();

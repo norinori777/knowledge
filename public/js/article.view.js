@@ -140,37 +140,103 @@ var app = app || {};
 		el: '#detailModal',
 
 		events: {
-			'click #article-show-button': 'articleShow',
+			'click #article-edit-button': 'articleEdit'
 		},
 		articleShow: function(id){
 			var article = app.Articles.findWhere({"_id":id});
-			this.renderShowForm(article);
+			this.renderShowDetail(article);
 		},
-		renderShowForm: function(article){
-			var str;
+		renderShowDetail: function(article){
+			var str,
+			 //　表示用にディープコピーを実施
+			data = $.extend(true,{},article.attributes);
+
+			data.article.content1 = app.util.chgNewLine(data.article.content1);
+			data.article.content2 = app.util.chgNewLine(data.article.content2);			
 
 			if(article.attributes.article.category === '障害情報'){
-				str = this.showDetailFailureTemplate(article.attributes);
+				str = this.showDetailFailureTemplate(data);
 			}
 			if(article.attributes.article.category === '問い合わせ情報'){
-				str = this.showDetailQuestionTemplate(article.attributes);
+				str = this.showDetailQuestionTemplate(data);
 			}
 			if(article.attributes.article.category === '技術情報'){
-				str = this.showDetailTecTemplate(article.attributes);
+				str = this.showDetailTecTemplate(data);
 			}
 			if(article.attributes.article.category === '共有情報'){
-				str = this.showDetailComTemplate(article.attributes);
+				str = this.showDetailComTemplate(data);
 			}
 			if(article.attributes.article.category === 'ショート情報'){
-				str = this.showDetailShortTemplate(article.attributes);
+				str = this.showDetailShortTemplate(data);
 			}
 			if(article.attributes.article.category === 'プロジェクト情報'){
-				str = this.showDetailProjectTemplate(article.attributes);
+				str = this.showDetailProjectTemplate(data);
 			}
 			this.$('#show-detail').html(str);
 			return this;
+		},
+		articleEdit: function(e){
+			this.trigger('showEdit',$('#article-edit-id').attr("value"));	
 		}
+	});
 
+	app.ArticleEditView = Backbone.View.extend({
+
+		initialize: function(){
+
+			this.$title = this.$('#edit-title');
+			this.$errorCode = this.$('#edit-errorCode');
+			this.$progress = this.$('#edit-progress');
+			this.$category = this.$('#edit-category');
+			this.$content1 = this.$('#edit-content1');
+			this.$content2 = this.$('#edit-content2');
+
+			var detailView = new app.ArticleDetailView();
+			this.listenTo(detailView, 'showEdit', this.articleEdit);
+		},
+
+		el: '#editModal',
+
+		// read template
+		editFormFailureTemplate: _.template($('#editFormFailureTemplate').html()),
+		editFormQuestionTemplate: _.template($('#editFormQuestionTemplate').html()),
+		editFormTecTemplate: _.template($('#editFormTecTemplate').html()),
+		editFormComTemplate: _.template($('#editFormComTemplate').html()),
+		editFormProjectTemplate: _.template($('#editFormProjectTemplate').html()),
+		editFormShortTemplate: _.template($('#editFormShortTemplate').html()),
+
+		articleEdit: function(id){
+			var article = app.Articles.findWhere({"_id":id});
+			this.renderEditForm(article);
+		},
+		renderEditForm: function(article){
+			var str;
+
+			if(article.attributes.article.category === '障害情報'){
+				str = this.editFormFailureTemplate(article.attributes);
+				$('#edit-progress').val(article.attributes.progress);
+			}
+			if(article.attributes.article.category === '問い合わせ情報'){
+				str = this.editFormQuestionTemplate(article.attributes);
+				$('#edit-progress').val(article.attributes.progress);
+			}
+			if(article.attributes.article.category === '技術情報'){
+				str = this.editFormTecTemplate(article.attributes);
+			}
+			if(article.attributes.article.category === '共有情報'){
+				str = this.editFormComTemplate(article.attributes);
+			}
+			if(article.attributes.article.category === 'ショート情報'){
+				str = this.editFormShortTemplate(article.attributes);
+			}
+			if(article.attributes.article.category === 'プロジェクト情報'){
+				str = this.editFormProjectTemplate(article.attributes);
+				$('#edit-progress').val(article.attributes.progress);
+			}
+			$('#edit-category').val(article.attributes.category);
+			this.$('#edit-form').html(str);
+			return this;
+		}	
 	});
 
 	app.Articles.model = app.ArticleModel;
