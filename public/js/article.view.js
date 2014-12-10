@@ -140,7 +140,7 @@ var app = app || {};
 		el: '#detailModal',
 
 		events: {
-			'click #article-edit-button': 'articleEdit',
+			'click #show-edit-button': 'articleEdit',
 			'click #article-delete-button': 'articleDelete'
 		},
 		articleShow: function(id){
@@ -177,17 +177,32 @@ var app = app || {};
 			return this;
 		},
 		articleEdit: function(e){
-			this.trigger('showEdit',$('#article-edit-id').attr("value"));	
+			$('#detailModal').modal('hide');
+			this.trigger('showEdit',$('#show-detail-id').attr("value"));
 		},
 		articleDelete: function(e){
+			// e.prependDefault();
+
 			if(confirm("削除してよろしいですか？")){
-				var id = $('#article-edit-id').attr("value");
+				var id = $('#article-detail-id').attr("value");
 				var article = app.Articles.findWhere({"_id":id});
-				article.destroy();
+				article.destroy({
+					wait: true,
+					success: function(resp){
+						alert("削除に成功しました。");
+						$('#detailModal').modal('hide');
+					},
+					error: function(resp){
+						alert("削除に失敗しました。");
+
+					}
+				});
 			}
+			e.prependDefault();
 		}
 	});
 
+	// 編集
 	app.ArticleEditView = Backbone.View.extend({
 
 		initialize: function(){
@@ -200,10 +215,13 @@ var app = app || {};
 			this.$content2 = this.$('#edit-content2');
 
 			var detailView = new app.ArticleDetailView();
-			this.listenTo(detailView, 'showEdit', this.articleEdit);
+			this.listenTo(detailView, 'showEdit', this.showEdit);
 		},
 
 		el: '#editModal',
+		events: {
+			'click #article-edit-button':'editArticle'
+		},
 
 		// read template
 		editFormFailureTemplate: _.template($('#editFormFailureTemplate').html()),
@@ -213,7 +231,17 @@ var app = app || {};
 		editFormProjectTemplate: _.template($('#editFormProjectTemplate').html()),
 		editFormShortTemplate: _.template($('#editFormShortTemplate').html()),
 
-		articleEdit: function(id){
+		newAttributes: function(){
+			var values, i, params, return_data = {};
+			values = $('#article-edit');
+			params = values.serializeArray();
+			for(i = 0; i < params.length; i++){
+				return_data[params[i].name] = params[i].value;
+			}
+			return return_data;
+		},
+		showEdit: function(e){
+			var id = $('#article-edit-id').attr("value");
 			var article = app.Articles.findWhere({"_id":id});
 			this.renderEditForm(article);
 		},
@@ -244,6 +272,9 @@ var app = app || {};
 			$('#edit-category').val(article.attributes.article.category);
 			this.$('#edit-form').html(str);
 			return this;
+		},
+		editArticle: function(e){
+			app.Articles.save(newAttributes());
 		}	
 	});
 

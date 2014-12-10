@@ -202,14 +202,14 @@
         </div>
         <div class="modal-footer">
           <button class="btn" data-dismiss="modal" aria-hidden="true">閉じる</button>
-          <a href="#editModal" id="article-edit-button" role="button" class="btn btn-warning" data-toggle="modal">編集</a>
+          <a href="#editModal" id="show-edit-button" role="button" class="btn btn-warning" data-toggle="modal">編集</a>
           <button id="article-delete-button" class="btn btn-danger">削除</button>
         </div>
       </div>
 
       <!-- 詳細フォームテンプレート -->
       <script id="showDetailFailureTemplate" type="text/template">
-        <input type="hidden" id="article-edit-id" value=<%- _id %> >
+        <input type="hidden" id="article-detail-id" value=<%- _id %> >
         <h3>カテゴリ</h3>
         <p><%= article.category %></p>
         <h3>タイトル</h3>
@@ -225,7 +225,7 @@
       </script>
 
       <script id="showDetailQuestionTemplate" type="text/template">
-        <input type="hidden" id="article-edit-id" value=<%- _id %> >
+        <input type="hidden" id="article-detail-id" value=<%- _id %> >
         <h3>カテゴリ</h3>
         <p><%- article.category %></p>
         <h3>タイトル</h3>
@@ -239,7 +239,7 @@
       </script>
 
       <script id="showDetailTecTemplate" type="text/template">
-        <input type="hidden" id="article-edit-id" value=<%- _id %> >
+        <input type="hidden" id="article-detail-id" value=<%- _id %> >
         <h3>カテゴリ</h3>
         <p><%- article.category %></p>
         <h3>タイトル</h3>
@@ -251,7 +251,7 @@
       </script>
 
       <script id="showDetailComTemplate" type="text/template">
-        <input type="hidden" id="article-edit-id" value=<%- _id %> >
+        <input type="hidden" id="article-detail-id" value=<%- _id %> >
         <h3>カテゴリ</h3>
         <p><%- article.category %></p>
         <h3>タイトル</h3>
@@ -263,7 +263,7 @@
       </script>
 
       <script id="showDetailProjectTemplate" type="text/template">
-        <input type="hidden" id="article-edit-id" value=<%- _id %> >
+        <input type="hidden" id="article-detail-id" value=<%- _id %> >
         <h3>カテゴリ</h3>
         <p><%- article.category %></p>
         <h3>プロジェクト名</h3>
@@ -277,7 +277,7 @@
       </script>
 
       <script id="showDetailShortTemplate" type="text/template">
-        <input type="hidden" id="article-edit-id" value=<%- _id %> >
+        <input type="hidden" id="article-detail-id" value=<%- _id %> >
         <h3>カテゴリ</h3>
         <p><%- article.category %></p>
         <h3>タイトル</h3>
@@ -293,7 +293,7 @@
           <h3 id="myModalLabel">情報編集</h3>
         </div>
         <div class="modal-body">
-          <form id="article-data">
+          <form id="article-edit">
             <fieldset>
               <label>入力内容</label>
               <select id='edit-category' name="category">
@@ -310,7 +310,7 @@
         </div>
         <div class="modal-footer">
           <button class="btn" data-dismiss="modal" aria-hidden="true">閉じる</button>
-          <button id="article-add-button" class="btn btn-warning">変更</button>
+          <button id="articledit-button" class="btn btn-warning">変更</button>
         </div>
       </div>
 

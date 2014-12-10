@@ -6,13 +6,15 @@ var app = app || {};
 	app.ArticleModel = Backbone.Model.extend({
 		//値のデフォルト設定
 		defaults:{
-			category:'',
-			title:'',
-			content1:'',
-			content2:''
 		},
+		url: '/knowledge/',
+		idAttribute: '_id',
 		//初期化処理
 		initialize:function(){
+			if(this.id){
+				this.url = this.url + this.id;
+			}
+
 			console.log('articleが初期化されました');
 			this.on('change',function(){
 				console.log('articleの値が変更されました');

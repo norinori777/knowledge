@@ -13,6 +13,10 @@ app.util = (function () {
   chgNewLine = function ( str ) {
     var _str = str;
 
+    if(str === undefined){
+      return str;
+    }
+
     // _str = _str.replace(/\r\n/g, "&lt;br /&gt;<br>");
     // _str = _str.replace(/\n|\r/g, "&lt;br /&gt;<br>");
     _str = _str.replace(/\r\n/g, "<br>");
