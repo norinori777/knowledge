@@ -140,7 +140,7 @@ var app = app || {};
 		el: '#detailModal',
 
 		events: {
-			'click #show-edit-button': 'articleEdit',
+			'click #show-edit-button': 'showEdit',
 			'click #article-delete-button': 'articleDelete'
 		},
 		articleShow: function(id){
@@ -176,13 +176,13 @@ var app = app || {};
 			this.$('#show-detail').html(str);
 			return this;
 		},
-		articleEdit: function(e){
+		showEdit: function(e){
 			$('#detailModal').modal('hide');
-			this.trigger('showEdit',$('#show-detail-id').attr("value"));
+			this.trigger('showEdit',$('#article-detail-id').attr("value"));
 		},
 		articleDelete: function(e){
-			// e.prependDefault();
-
+			e.preventDefault();
+			e.stopPropagation();
 			if(confirm("削除してよろしいですか？")){
 				var id = $('#article-detail-id').attr("value");
 				var article = app.Articles.findWhere({"_id":id});
@@ -194,17 +194,14 @@ var app = app || {};
 					},
 					error: function(resp){
 						alert("削除に失敗しました。");
-
 					}
 				});
 			}
-			e.prependDefault();
 		}
 	});
 
 	// 編集
 	app.ArticleEditView = Backbone.View.extend({
-
 		initialize: function(){
 
 			this.$title = this.$('#edit-title');
@@ -240,8 +237,7 @@ var app = app || {};
 			}
 			return return_data;
 		},
-		showEdit: function(e){
-			var id = $('#article-edit-id').attr("value");
+		showEdit: function(id){
 			var article = app.Articles.findWhere({"_id":id});
 			this.renderEditForm(article);
 		},
@@ -274,8 +270,10 @@ var app = app || {};
 			return this;
 		},
 		editArticle: function(e){
-			app.Articles.save(newAttributes());
-		}	
+			var id = $('#article-edit-id').attr("value");
+			var article = app.Articles.findWhere({"_id":id});
+			article.save(app.util.getFormAttributes('article-edit'));
+		}
 	});
 
 	app.Articles.model = app.ArticleModel;

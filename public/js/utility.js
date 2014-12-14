@@ -7,25 +7,33 @@
 /*global $, app */
 var app = app || {};
 
-app.util = (function () {
-  var chgNewLine;
-  //
-  chgNewLine = function ( str ) {
+app.util = (function(){
+  var chgNewLine, getFormAttributes;
+
+  chgNewLine = function(str){
     var _str = str;
 
     if(str === undefined){
       return str;
     }
-
-    // _str = _str.replace(/\r\n/g, "&lt;br /&gt;<br>");
-    // _str = _str.replace(/\n|\r/g, "&lt;br /&gt;<br>");
     _str = _str.replace(/\r\n/g, "<br>");
     _str = _str.replace(/\n|\r/g, "<br>");
 
     return _str;
   };
 
+  getFormAttributes = function(value){
+    var values, i, params, return_data = {};
+    values = $('#'+value);
+    params = values.serializeArray();
+    for(i = 0; i < params.length; i++){
+      return_data[params[i].name] = params[i].value;
+    }
+    return return_data;
+  };
+
   return {
-    chgNewLine    : chgNewLine
+    chgNewLine        : chgNewLine,
+    getFormAttributes  : getFormAttributes
   };
 }());
