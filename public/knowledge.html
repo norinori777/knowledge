@@ -171,23 +171,33 @@
       <div id="searchModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
         <div class="modal-header">
           <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-          <h3 id="myModalLabel">検索画面</h3>
+          <h3 id="searchLabel">検索画面</h3>
         </div>
         <div class="modal-body">
         <label>検索期間</label>
-        <select id='input-progress' name="progress">
+        <select id='search-progress' name="progress">
           <option value="default" selected="true">－－ 選択してください －－</option>
           <option value="31">１ヶ月以内</option>
           <option value="91">３ヶ月以内</option>
           <option value="183">６ヶ月以内</option>
           <option value="365">1年以内</option>
         </select>
+        <label>カテゴリー</label>
+        <select id='search-category' name="category">
+          <option value="default" selected="true">－－　選択してください －－</option>
+          <option value="障害情報">障害情報</option>
+          <option value="問い合わせ情報">問い合わせ情報</option>
+          <option value="技術情報">技術情報</option>
+          <option value="共有情報">共有情報</option>
+          <option value="ショート情報">ショート情報</option>
+          <option value="プロジェクト情報">プロジェクト共有情報</option>
+        </select>
         <label>検索内容</label>
-        <input id='input-title' name="title" type="text" placeholder="キーワード入力">
+        <input id='search-keyword' name="keyword" type="text" placeholder="キーワード入力">
         </div>
         <div class="modal-footer">
           <button class="btn" data-dismiss="modal" aria-hidden="true">閉じる</button>
-          <button class="btn btn-primary">検索</button>
+          <button id="search-article-button" class="btn btn-primary">検索</button>
         </div>
       </div>
 
@@ -233,9 +243,9 @@
         <h3>進捗</h3>
         <p><%- article.progress %></p>
         <h3>問い合わせ内容</h3>
-        <p><%- article.content1 %></p>
+        <p><%= article.content1 %></p>
         <h3>対応内容</h3>
-        <p><%- article.content2 %></p>        
+        <p><%= article.content2 %></p>        
       </script>
 
       <script id="showDetailTecTemplate" type="text/template">
@@ -245,9 +255,9 @@
         <h3>タイトル</h3>
         <p><%- article.title %></p>
         <h3>内容</h3>
-        <p><%- article.content1 %></p>
+        <p><%= article.content1 %></p>
         <h3>詳細</h3>
-        <p><%- article.content2 %></p>        
+        <p><%= article.content2 %></p>        
       </script>
 
       <script id="showDetailComTemplate" type="text/template">
@@ -257,9 +267,9 @@
         <h3>タイトル</h3>
         <p><%- article.title %></p>
         <h3>内容１</h3>
-        <p><%- article.content1 %></p>
+        <p><%= article.content1 %></p>
         <h3>内容２</h3>
-        <p><%- article.content2 %></p>  
+        <p><%= article.content2 %></p>  
       </script>
 
       <script id="showDetailProjectTemplate" type="text/template">
@@ -271,9 +281,9 @@
         <h3>工程</h3>
         <p><%- article.progress %></p>
         <h3>内容</h3>
-        <p><%- article.content1 %></p>
+        <p><%= article.content1 %></p>
         <h3>詳細</h3>
-        <p><%- article.content2 %></p>        
+        <p><%= article.content2 %></p>        
       </script>
 
       <script id="showDetailShortTemplate" type="text/template">
@@ -281,19 +291,19 @@
         <h3>カテゴリ</h3>
         <p><%- article.category %></p>
         <h3>タイトル</h3>
-        <p><%- article.title %></p>
+        <p><%= article.title %></p>
         <h3>内容１</h3>
-        <p><%- article.content1 %></p>
+        <p><%= article.content1 %></p>
       </script>
 
       <!-- 編集モーダル -->
       <div id="editModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
         <div class="modal-header">
           <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-          <h3 id="myModalLabel">情報編集</h3>
+          <h3 id="editLabel">情報編集</h3>
         </div>
         <div class="modal-body">
-          <form id="article-edit">
+          <form id="edit-data">
             <fieldset>
               <label>入力内容</label>
               <select id='edit-category' name="category">

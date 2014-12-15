@@ -270,9 +270,19 @@ var app = app || {};
 			return this;
 		},
 		editArticle: function(e){
-			var id = $('#article-edit-id').attr("value");
-			var article = app.Articles.findWhere({"_id":id});
-			article.save(app.util.getFormAttributes('article-edit'));
+			var
+			id = $('#article-edit-id').attr("value"),
+			article = app.Articles.findWhere({"_id":id}),
+			data = app.util.getFormAttributes('edit-data');
+			article.save({article:data},{
+				success: function(){
+					alert("更新に成功しました");
+					$('#editModal').modal('hide');					
+				},
+				error: function(){
+					alert("更新に失敗しました");
+				}
+			});
 		}
 	});
 
